@@ -75,10 +75,10 @@ export default function HeroSection() {
           transition={{ duration: 1, delay: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Button href="/browse-all-projects" variant="cta">
+          <Button href="/browse-all-projects" variant="secondary" className="bg-white text-gray-800 shadow-[0_8px_32px_rgba(255,255,255,0.3)] hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(255,255,255,0.4)]">
             Browse All Projects
           </Button>
-          <Button href="/sell-your-project" variant="cta">
+          <Button href="/sell-your-project" variant="secondary" className="bg-white text-gray-800 shadow-[0_8px_32px_rgba(255,255,255,0.3)] hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(255,255,255,0.4)]">
             Sell Your Project
           </Button>
         </motion.div>
