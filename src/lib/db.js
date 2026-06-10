@@ -8,8 +8,9 @@ let db = null;
 export async function getDb() {
   if (db) return db;
   if (!SQL) {
+    const wasmPath = path.join(process.cwd(), 'public', 'sql-wasm.wasm');
     SQL = await initSqlJs({
-      locateFile: (file) => path.join(process.cwd(), 'node_modules', 'sql.js', 'dist', file),
+      locateFile: (file) => fs.existsSync(wasmPath) ? wasmPath : path.join(process.cwd(), 'node_modules', 'sql.js', 'dist', file),
     });
   }
   const tmpPath = '/tmp/innovateguide.db';
