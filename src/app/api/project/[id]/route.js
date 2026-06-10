@@ -1,7 +1,8 @@
 import { getDb } from '@/lib/db';
 
-export async function GET(request, { params }) {
+export async function GET(request, { params: paramsPromise }) {
   try {
+    const params = await paramsPromise;
     const db = await getDb();
     const rows = db.exec('SELECT * FROM project WHERE id = ? AND status = ?', [String(params.id), 'active']);
     if (!rows.length) return Response.json({ error: 'Project not found' }, { status: 404 });

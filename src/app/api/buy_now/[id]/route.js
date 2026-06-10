@@ -1,7 +1,8 @@
 import { getDb, saveDb } from '@/lib/db';
 
-export async function POST(request, { params }) {
+export async function POST(request, { params: paramsPromise }) {
   try {
+    const params = await paramsPromise;
     const db = await getDb();
     const fd = await request.formData();
     db.run(
