@@ -1,29 +1,25 @@
-import { getFirst } from '@/lib/db';
+import { getDb } from '@/lib/db';
 
-export async function GET(request, { params: paramsPromise }) {
+export async function GET(request, { params }) {
   try {
-    const params = await paramsPromise;
-    const p = await getFirst('SELECT * FROM project WHERE id = ? AND LOWER(status) = ?', [params.id, 'active']);
-    if (!p) return Response.json({ error: 'Project not found' }, { status: 404 });
+    const db = await getDb();
+    const rows = db.exec('SELECT * FROM project WHERE id = ? AND status = ?', [String(params.id), 'active']);
+    if (!rows.length) return Response.json({ error: 'Project not found' }, { status: 404 });
 
-    const tech = typeof p.technologies === 'string' ? JSON.parse(p.technologies) : (p.technologies || []);
-    const shots = typeof p.screenshots === 'string' ? JSON.parse(p.screenshots) : (p.screenshots || []);
+    const columns = rows[0].columns;
+    const p = Object.fromEntries(columns.map((c, i) => [c, rows[0].values[0][i]]));
+    p.technologies = p.technologies ? JSON.parse(p.technologies) : [];
+    p.screenshots = p.screenshots ? JSON.parse(p.screenshots) : [];
+    p.technology = p.technologies;
+    p.difficulty = p.difficulty_level || 'Intermediate';
+    p.rating = 4;
+    p.popularity = 80;
+    p.date_added = p.created_at ? new Date(p.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    p.seller = p.developer_name || 'Admin';
+    p.image = (p.screenshots && p.screenshots.length > 0) ? p.screenshots[0] : `https://via.placeholder.com/300x200?text=${p.title.replace(/\s+/g, '+')}`;
+    p.sales_count = 10;
 
-    const project = {
-      ...p,
-      technologies: tech,
-      screenshots: shots,
-      technology: tech,
-      difficulty: p.difficulty_level || 'Intermediate',
-      rating: 4,
-      popularity: 80,
-      date_added: p.created_at ? new Date(p.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-      seller: p.developer_name || 'Admin',
-      image: shots.length > 0 ? shots[0] : `https://via.placeholder.com/300x200?text=${(p.title || '').replace(/\s+/g, '+')}`,
-      sales_count: 10,
-    };
-
-    return Response.json({ project });
+    return Response.json({ project: p });
   } catch (err) {
     return Response.json({ error: 'Failed to fetch project' }, { status: 500 });
   }
