@@ -4,8 +4,6 @@ import { motion } from 'framer-motion';
 import ProjectCarousel from './ProjectCarousel';
 
 export default function ProjectCarouselSection({ projects, title, subtitle, badge, badgeClass, buttonClass, sectionId }) {
-  if (!projects || projects.length === 0) return null;
-
   return (
     <section id={sectionId} className="py-12 sm:py-20 scroll-mt-[100px]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
@@ -23,12 +21,16 @@ export default function ProjectCarouselSection({ projects, title, subtitle, badg
             </p>
           )}
         </motion.div>
-        <ProjectCarousel
-          projects={projects}
-          badge={badge}
-          badgeClass={badgeClass}
-          buttonClass={buttonClass}
-        />
+        {projects && projects.length > 0 ? (
+          <ProjectCarousel
+            projects={projects}
+            badge={badge}
+            badgeClass={badgeClass}
+            buttonClass={buttonClass}
+          />
+        ) : (
+          <p className="text-center text-text-light text-sm py-8">No projects available at this time. Check back later.</p>
+        )}
       </div>
     </section>
   );
