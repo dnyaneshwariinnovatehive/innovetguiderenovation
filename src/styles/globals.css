@@ -12,6 +12,7 @@
   --color-bg-light: #f8f9fa;
   --color-bg-white: #ffffff;
   --color-success: #27ae60;
+  --color-warning: #f39c12;
   --color-border: #ecf0f1;
   --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
   --shadow-card: 0 8px 30px rgba(0,0,0,0.08);
@@ -22,19 +23,27 @@
 
 @layer base {
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+  }
   body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.7;
     color: var(--color-text-primary);
     background-color: var(--color-bg-white);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+  img { max-width: 100%; height: auto; display: block; }
+  ::selection { background-color: var(--color-primary); color: white; }
 }
 
 @layer utilities {
   .hide-scrollbar::-webkit-scrollbar { display: none; }
   .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .text-balance { text-wrap: balance; }
 }
 
 @keyframes gradientShift {
@@ -45,4 +54,51 @@
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(60px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(1deg); }
+  66% { transform: translateY(4px) rotate(-1deg); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes draw-line {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(27,85,115,0.3); }
+  50% { box-shadow: 0 0 25px rgba(27,85,115,0.6); }
+}
+
+@keyframes slide-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

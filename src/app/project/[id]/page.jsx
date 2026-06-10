@@ -3,12 +3,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Share2, Check, X, Play, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { Share2, Check, X, Play, ExternalLink, ChevronDown, ChevronUp, Tag, Layers, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import Loader from '@/components/common/Loader';
 import ProjectImage from '@/components/projects/ProjectImage';
+import ProjectLevel from '@/components/projects/ProjectLevel';
+import ProjectPrice from '@/components/projects/ProjectPrice';
 import { API_BASE } from '@/lib/constants';
 import axios from '@/lib/axios';
 
@@ -17,8 +19,6 @@ function resolveUrl(url) {
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   return `${API_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
 }
-
-const THEME_COLOR = '#1B5573';
 
 export default function ProjectDetailsPage() {
   const params = useParams();
@@ -125,7 +125,8 @@ export default function ProjectDetailsPage() {
     `Explore the ${project.title} project — a ${project.difficulty_level || 'beginner'}-friendly project in the ${domain} domain. This project covers practical concepts using ${technologies.length > 0 ? technologies.join(', ') : 'modern development tools'} to help you build real-world skills through hands-on learning.`;
 
   return (
-    <section className="py-12 sm:py-20">
+    <section className="py-16 sm:py-24 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
       <Container>
         {/* Header */}
         <div className="flex flex-wrap items-start justify-between gap-4 mb-10">
@@ -134,11 +135,11 @@ export default function ProjectDetailsPage() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
               Back to Projects
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">{project.title}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-text-primary to-primary bg-clip-text text-transparent">{project.title}</h1>
           </div>
           <button
             onClick={handleShare}
-            className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-semibold text-sm bg-transparent cursor-pointer transition-all hover:bg-primary hover:text-white"
+            className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-primary/30 text-primary font-semibold text-sm bg-transparent cursor-pointer transition-all hover:bg-primary hover:text-white hover:border-primary active:scale-95"
             aria-label="Share project"
           >
             <Share2 className="w-4 h-4" />
@@ -155,10 +156,13 @@ export default function ProjectDetailsPage() {
             className="lg:col-span-4 space-y-8"
           >
             {/* Images */}
-            <div>
-              <h2 className="text-lg font-bold text-text-primary mb-4">Project Images</h2>
+            <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-4 sm:p-5">
+              <h2 className="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
+                <Layers className="w-4 h-4 text-primary" />
+                Project Images
+              </h2>
               <div
-                className="relative rounded-xl overflow-hidden mb-3 aspect-video bg-bg-light cursor-pointer"
+                className="relative rounded-xl overflow-hidden mb-3 aspect-video bg-bg-light cursor-pointer group"
                 onClick={() => setImageModalOpen(true)}
               >
                 <ProjectImage
@@ -166,6 +170,9 @@ export default function ProjectDetailsPage() {
                   title={project.title}
                   index={selectedImage}
                 />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                  <span className="text-white/0 group-hover:text-white/80 text-xs font-medium transition-all duration-300 bg-black/50 px-3 py-1.5 rounded-lg">Click to expand</span>
+                </div>
               </div>
               {allImages.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
@@ -175,8 +182,8 @@ export default function ProjectDetailsPage() {
                       onClick={() => setSelectedImage(i)}
                       className={`shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                         i === selectedImage
-                          ? 'border-primary opacity-100'
-                          : 'border-transparent opacity-60 hover:opacity-90'
+                          ? 'border-primary opacity-100 shadow-sm'
+                          : 'border-transparent opacity-50 hover:opacity-80'
                       }`}
                     >
                       <ProjectImage src={img} title={`${project.title} ${i + 1}`} index={i} />
@@ -188,11 +195,14 @@ export default function ProjectDetailsPage() {
 
             {/* Technologies */}
             {technologies.length > 0 && (
-              <div>
-                <h2 className="text-lg font-bold text-text-primary mb-4">Technologies</h2>
+              <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-4 sm:p-5">
+                <h2 className="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-primary" />
+                  Technologies
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   {technologies.map((tech) => (
-                    <span key={tech} className="px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <span key={tech} className="px-3 py-1.5 rounded-lg bg-gradient-to-br from-primary/5 to-accent/5 text-primary text-xs font-semibold border border-primary/10">
                       {tech}
                     </span>
                   ))}
@@ -209,40 +219,44 @@ export default function ProjectDetailsPage() {
             className="lg:col-span-5 space-y-8"
           >
             {/* Description */}
-            <div>
-              <h2 className="text-lg font-bold text-text-primary mb-4">Description</h2>
-              <div className="bg-white rounded-xl border border-gray-100 p-5">
-                <div ref={descRef} className={`relative overflow-hidden transition-all duration-300 ${descExpanded ? '' : 'max-h-[7.5rem]'}`}>
-                  <p className="text-text-secondary leading-relaxed whitespace-pre-line">
-                    {fallbackDescription}
-                  </p>
-                  {!descExpanded && (
-                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent" />
-                  )}
-                </div>
-                <button
-                  onClick={() => setDescExpanded(!descExpanded)}
-                  className="mt-2 inline-flex items-center gap-1 text-sm text-primary font-semibold bg-transparent border-none cursor-pointer hover:underline"
-                >
-                  {descExpanded ? (
-                    <>Read Less <ChevronUp className="w-4 h-4" /></>
-                  ) : (
-                    <>Read More <ChevronDown className="w-4 h-4" /></>
-                  )}
-                </button>
+            <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-5 sm:p-6">
+              <h2 className="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-primary" />
+                Description
+              </h2>
+              <div ref={descRef} className={`relative overflow-hidden transition-all duration-300 ${descExpanded ? '' : 'max-h-[7.5rem]'}`}>
+                <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                  {fallbackDescription}
+                </p>
+                {!descExpanded && (
+                  <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent" />
+                )}
               </div>
+              <button
+                onClick={() => setDescExpanded(!descExpanded)}
+                className="mt-2 inline-flex items-center gap-1 text-sm text-primary font-semibold bg-transparent border-none cursor-pointer hover:underline"
+              >
+                {descExpanded ? (
+                  <>Read Less <ChevronUp className="w-4 h-4" /></>
+                ) : (
+                  <>Read More <ChevronDown className="w-4 h-4" /></>
+                )}
+              </button>
             </div>
 
             {/* Demo & Resources */}
-            <div>
-              <h2 className="text-lg font-bold text-text-primary mb-4">Demo &amp; Resources</h2>
+            <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-5 sm:p-6">
+              <h2 className="text-sm font-bold text-text-primary mb-4 flex items-center gap-2">
+                <Play className="w-4 h-4 text-primary" />
+                Demo &amp; Resources
+              </h2>
               <div className="flex flex-wrap gap-3">
                 {project.video_tutorial && (
                   <a
                     href={resolveUrl(project.video_tutorial)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-semibold text-sm no-underline transition-all hover:bg-primary-dark"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-white font-semibold text-sm no-underline transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 active:scale-95"
                   >
                     <Play className="w-4 h-4" />
                     View Demo Video
@@ -253,7 +267,7 @@ export default function ProjectDetailsPage() {
                     href={resolveUrl(project.zip_file)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-primary text-primary font-semibold text-sm no-underline transition-all hover:bg-primary hover:text-white"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-primary/30 text-primary font-semibold text-sm no-underline transition-all hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 active:scale-95"
                   >
                     <ExternalLink className="w-4 h-4" />
                     Download Project Files
@@ -273,15 +287,17 @@ export default function ProjectDetailsPage() {
             transition={{ delay: 0.2 }}
             className="lg:col-span-3"
           >
-            <div className="bg-white rounded-xl border border-gray-100 shadow-card p-6 sticky top-24 space-y-5">
+            <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-6 sticky top-24 space-y-5">
               {/* Price */}
               <div className="text-center pb-4 border-b border-gray-100">
                 <p className="text-text-light text-xs uppercase tracking-wider mb-1">Price</p>
-                <p className="text-3xl sm:text-4xl font-bold text-primary">₹{project.price?.toLocaleString() || 'N/A'}</p>
+                <p className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  ₹{project.price?.toLocaleString() || 'N/A'}
+                </p>
               </div>
 
               {/* Buy Now */}
-              <Link href={`/buy-now/${project.id}`} className="block">
+              <Link href={`/buy-now/${project.id}`}>
                 <Button variant="primary" className="w-full text-center text-base py-3">
                   Buy Now
                 </Button>
@@ -290,7 +306,7 @@ export default function ProjectDetailsPage() {
               {/* Share */}
               <button
                 onClick={handleShare}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary text-primary font-semibold text-sm bg-transparent cursor-pointer transition-all hover:bg-primary hover:text-white"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary/30 text-primary font-semibold text-sm bg-transparent cursor-pointer transition-all hover:bg-primary hover:text-white hover:border-primary active:scale-95"
                 aria-label="Share project"
               >
                 <Share2 className="w-4 h-4" />
@@ -298,21 +314,17 @@ export default function ProjectDetailsPage() {
               </button>
 
               {/* Info List */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-bg-light">
-                  <span className="text-text-light text-xs uppercase tracking-wider">Project Type</span>
-                  <span className="text-text-primary font-semibold text-sm">{projectType}</span>
-                </div>
-                {project.difficulty_level && (
-                  <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-bg-light">
-                    <span className="text-text-light text-xs uppercase tracking-wider">Difficulty</span>
-                    <span className="text-text-primary font-semibold text-sm capitalize">{project.difficulty_level}</span>
+              <div className="space-y-2 pt-2">
+                {[
+                  { label: 'Project Type', value: projectType },
+                  { label: 'Difficulty', value: project.difficulty_level, show: !!project.difficulty_level },
+                  { label: 'Domain', value: domain },
+                ].filter((item) => item.show !== false).map((item) => (
+                  <div key={item.label} className="flex items-center justify-between py-2.5 px-3.5 rounded-xl bg-gradient-to-br from-bg-light to-white border border-gray-100/50">
+                    <span className="text-text-light text-xs uppercase tracking-wider">{item.label}</span>
+                    <span className="text-text-primary font-semibold text-sm capitalize">{item.value}</span>
                   </div>
-                )}
-                <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-bg-light">
-                  <span className="text-text-light text-xs uppercase tracking-wider">Domain</span>
-                  <span className="text-text-primary font-semibold text-sm">{domain}</span>
-                </div>
+                ))}
               </div>
             </div>
           </motion.div>
@@ -320,11 +332,11 @@ export default function ProjectDetailsPage() {
 
         {/* Share Modal */}
         {shareOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onClick={() => setShareOpen(false)}>
-            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-heavy" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4" onClick={() => setShareOpen(false)}>
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-gray-100" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-bold text-text-primary">Share this project</h3>
-                <button onClick={() => setShareOpen(false)} className="bg-transparent border-none cursor-pointer text-text-secondary hover:text-text-primary p-1" aria-label="Close">
+                <button onClick={() => setShareOpen(false)} className="bg-transparent border-none cursor-pointer text-text-secondary hover:text-text-primary p-1 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Close">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -339,7 +351,7 @@ export default function ProjectDetailsPage() {
                   <button
                     key={key}
                     onClick={() => shareVia(key)}
-                    className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors border-none cursor-pointer"
+                    className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors border-none cursor-pointer hover:-translate-y-0.5 active:scale-95"
                     aria-label={`Share on ${label}`}
                   >
                     <svg viewBox="0 0 24 24" width="22" height="22" fill={bg}>
@@ -358,7 +370,7 @@ export default function ProjectDetailsPage() {
                 />
                 <button
                   onClick={copyLink}
-                  className="shrink-0 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold border-none cursor-pointer transition-all hover:bg-primary-dark flex items-center gap-1.5"
+                  className="shrink-0 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold border-none cursor-pointer transition-all hover:bg-primary-dark flex items-center gap-1.5 active:scale-95"
                 >
                   {copied ? <Check className="w-4 h-4" /> : null}
                   {copied ? 'Copied' : 'Copy'}
@@ -370,11 +382,11 @@ export default function ProjectDetailsPage() {
 
         {/* Image Modal */}
         {imageModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4" onClick={() => setImageModalOpen(false)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4" onClick={() => setImageModalOpen(false)}>
             <div className="relative max-w-4xl w-full max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setImageModalOpen(false)}
-                className="absolute -top-12 right-0 text-white/70 hover:text-white bg-transparent border-none cursor-pointer text-lg p-1"
+                className="absolute -top-12 right-0 text-white/70 hover:text-white bg-transparent border-none cursor-pointer p-1 hover:scale-110 transition-transform"
                 aria-label="Close image"
               >
                 <X className="w-6 h-6" />
@@ -382,7 +394,7 @@ export default function ProjectDetailsPage() {
               <img
                 src={resolveUrl(allImages[selectedImage] || project.image)}
                 alt={project.title}
-                className="w-full h-auto max-h-[85vh] object-contain rounded-2xl"
+                className="w-full h-auto max-h-[85vh] object-contain rounded-2xl shadow-2xl"
               />
             </div>
           </div>
