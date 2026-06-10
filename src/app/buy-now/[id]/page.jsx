@@ -144,8 +144,8 @@ export default function BuyNowPage() {
             <div className="bg-white rounded-card shadow-card p-6 sticky top-24">
               <h3 className="font-bold text-text-primary mb-4">Order Summary</h3>
               <div className="aspect-video rounded-lg bg-bg-light overflow-hidden mb-4">
-                {project.image_path ? (
-                  <img src={project.image_path} alt={project.title} className="w-full h-full object-cover" />
+                {project.image || (project.screenshots && project.screenshots[0]) ? (
+                  <img src={project.image || project.screenshots[0]} alt={project.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-text-light text-sm">No Image</div>
                 )}

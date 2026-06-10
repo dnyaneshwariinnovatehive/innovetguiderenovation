@@ -114,6 +114,7 @@ export default function ProjectDetailsPage() {
     : project.image
       ? [project.image]
       : [];
+  const allImages = screenshots.length > 0 ? screenshots : [];
 
   const projectType = project.price < 40 ? 'Mini Project' : 'Major Project';
   const domain = Array.isArray(technologies) && technologies.length > 0
