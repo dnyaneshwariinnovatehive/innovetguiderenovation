@@ -7,7 +7,11 @@ let db = null;
 
 export async function getDb() {
   if (db) return db;
-  if (!SQL) SQL = await initSqlJs();
+  if (!SQL) {
+    SQL = await initSqlJs({
+      locateFile: (file) => path.join(process.cwd(), 'node_modules', 'sql.js', 'dist', file),
+    });
+  }
   const tmpPath = '/tmp/innovateguide.db';
   const srcPath = path.join(process.cwd(), 'data', 'innovateguide.db');
   let buffer;
