@@ -31,11 +31,14 @@ export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [authed, setAuthed] = useState(null);
 
+  const isLoginPage = pathname === '/admin/login';
+
   useEffect(() => {
+    if (isLoginPage) { setAuthed(true); return; }
     fetch('/api/admin/stats', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error(); setAuthed(true); })
       .catch(() => router.push('/admin/login'));
-  }, []);
+  }, [isLoginPage]);
 
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
