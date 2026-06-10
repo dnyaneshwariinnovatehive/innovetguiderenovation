@@ -32,11 +32,12 @@ export default function AdminLayout({ children }) {
   const [authed, setAuthed] = useState(null);
 
   const isLoginPage = pathname === '/admin/login';
+  const [initialized, setInitialized] = useState(isLoginPage);
 
   useEffect(() => {
-    if (isLoginPage) { setAuthed(true); return; }
+    if (isLoginPage) { setInitialized(true); setAuthed(true); return; }
     fetch('/api/admin/stats', { cache: 'no-store' })
-      .then(r => { if (!r.ok) throw new Error(); setAuthed(true); })
+      .then(r => { if (!r.ok) throw new Error(); setAuthed(true); setInitialized(true); })
       .catch(() => router.push('/admin/login'));
   }, [isLoginPage]);
 
@@ -45,7 +46,9 @@ export default function AdminLayout({ children }) {
     router.push('/admin/login');
   };
 
-  if (authed === null) return null;
+  if (!initialized) {
+    return <div className="min-h-screen bg-gradient-to-br from-bg-light via-white to-[#f0f4f8]" />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-bg-light via-white to-[#f0f4f8] flex">
