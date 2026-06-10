@@ -13,7 +13,7 @@
   --color-bg-white: #ffffff;
   --color-success: #27ae60;
   --color-border: #ecf0f1;
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
   --shadow-card: 0 8px 30px rgba(0,0,0,0.08);
   --shadow-medium: 0 15px 40px rgba(0,0,0,0.12);
   --shadow-heavy: 0 25px 60px rgba(0,0,0,0.15);
@@ -24,7 +24,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: var(--font-sans);
+    font-family: 'Poppins', sans-serif;
     line-height: 1.7;
     color: var(--color-text-primary);
     background-color: var(--color-bg-white);

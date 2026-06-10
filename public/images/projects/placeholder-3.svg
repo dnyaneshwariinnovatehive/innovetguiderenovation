@@ -1,0 +1,13 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a7fa3"/>
+      <stop offset="100%" stop-color="#1B5573"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#g1)"/>
+  <path d="M140 160 L160 110 L180 160 Z" fill="rgba(255,255,255,0.12)"/>
+  <path d="M170 170 L200 100 L230 170 Z" fill="rgba(255,255,255,0.18)"/>
+  <path d="M200 160 L220 110 L240 160 Z" fill="rgba(255,255,255,0.12)"/>
+  <text x="200" y="225" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="Poppins, sans-serif" font-size="16" font-weight="500">Trending Project</text>
+</svg>
