@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Project Enquiry Details - InnovateGuide</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin_dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/requested_projects_details.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-container">
+                    <img src="{{ url_for('admin.static', filename='Images/IG_LOGO.png') }}" alt="Logo" class="logo-image">
+                    <span class="logo-text">InnovateGuide</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('admin.requested_projects') }}"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                    <li class="active"><a href="{{ url_for('admin.custom_project_enquiries') }}"><i class="fas fa-clipboard-list"></i> Custom Proj Enquiry</a></li>
+                    <li><a href="{{ url_for('admin.buy_enquiries') }}"><i class="fas fa-shopping-cart"></i> Buy Enquiries</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Students</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Custom Project Enquiry Details</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Title and Actions -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Enquiry Details</h2>
+                    <p>Complete information about the custom project enquiry</p>
+                </div>
+                <div class="page-actions">
+                    <a href="{{ url_for('admin.custom_project_enquiries') }}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Enquiries
+                    </a>
+                </div>
+            </div>
+
+            <!-- Enquiry Details -->
+            <div class="details-container">
+                <!-- Customer Information -->
+                <div class="details-section">
+                    <h3><i class="fas fa-user"></i> Customer Information</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Full Name:</label>
+                            <span>{{ enquiry.name }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Email:</label>
+                            <span>{{ enquiry.email }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Enquiry Date:</label>
+                            <span>{{ enquiry.submitted_at.strftime('%Y-%m-%d %H:%M:%S') if enquiry.submitted_at else 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Requirements -->
+                <div class="details-section">
+                    <h3><i class="fas fa-project-diagram"></i> Project Requirements</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Project Type:</label>
+                            <span>{{ enquiry.project_type }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Budget:</label>
+                            <span>{{ enquiry.budget }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Deadline:</label>
+                            <span>{{ enquiry.deadline.strftime('%Y-%m-%d') if enquiry.deadline else 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Technologies:</label>
+                            <span>{{ enquiry.technologies or 'Not specified' }}</span>
+                        </div>
+                        <div class="detail-item full-width">
+                            <label>Description:</label>
+                            <span>{{ enquiry.description }}</span>
+                        </div>
+                        {% if enquiry.additional_info %}
+                        <div class="detail-item full-width">
+                            <label>Additional Information:</label>
+                            <span>{{ enquiry.additional_info }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .details-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .details-section {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .details-section:last-child {
+            border-bottom: none;
+        }
+
+        .details-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .details-section h3 i {
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .detail-item label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .detail-item span {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .btn-back {
+            padding: 8px 16px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</body>
+</html>

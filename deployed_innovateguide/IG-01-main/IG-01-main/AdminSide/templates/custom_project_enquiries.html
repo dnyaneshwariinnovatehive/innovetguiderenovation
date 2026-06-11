@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Project Enquiries - InnovateGuide</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin_dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/requested_projects.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-container">
+                    <img src="{{ url_for('admin.static', filename='Images/IG_LOGO.png') }}" alt="InnovateGuide Logo" class="logo-image">
+                    <span class="logo-text">InnovateGuide</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('admin.requested_projects') }}"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                    <li class="active"><a href="{{ url_for('admin.custom_project_enquiries') }}"><i class="fas fa-clipboard-list"></i> Custom Proj Enquiry</a></li>
+                    <li><a href="{{ url_for('admin.buy_enquiries') }}"><i class="fas fa-shopping-cart"></i> Buy Enquiries</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Students</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Header Section -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Custom Project Enquiries</h1>
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-enquiries" placeholder="Search enquiries...">
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Header -->
+            <div class="page-title">
+                <h2>Custom Project Development Enquiries</h2>
+                <div class="back-button">
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Enquiries Table Section -->
+            <div class="projects-table-section">
+                <div class="table-container">
+                    <table class="requested-projects-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Project Type</th>
+                                <th>Budget</th>
+                                <th>Deadline</th>
+                                <th>Enquiry Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enquiry in enquiries %}
+                            <tr>
+                                <td class="project-title">{{ enquiry.name }}</td>
+                                <td>{{ enquiry.email }}</td>
+                                <td>{{ enquiry.project_type }}</td>
+                                <td>{{ enquiry.budget }}</td>
+                                <td>{{ enquiry.deadline.strftime('%Y-%m-%d') if enquiry.deadline else 'N/A' }}</td>
+                                <td>{{ enquiry.submitted_at.strftime('%Y-%m-%d %H:%M') if enquiry.submitted_at else 'N/A' }}</td>
+                                <td class="actions">
+                                    <button class="btn-action btn-view" title="View Details"
+                                            onclick="location.href='{{ url_for('admin.view_custom_project_enquiry', enquiry_id=enquiry.id) }}'">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced search functionality
+        document.getElementById('search-enquiries').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.requested-projects-table tbody tr');
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Enquiry Details - InnovateGuide</title>
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin_dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/requested_projects_details.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-container">
+                    <img src="{{ url_for('admin.static', filename='Images/IG_LOGO.png') }}" alt="Logo" class="logo-image">
+                    <span class="logo-text">InnovateGuide</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('admin.requested_projects') }}"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                    <li class="active"><a href="{{ url_for('admin.buy_enquiries') }}"><i class="fas fa-shopping-cart"></i> Buy Enquiries</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Students</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1>Buy Enquiry Details</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Title and Actions -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Enquiry Details</h2>
+                    <p>Complete information about the purchase enquiry</p>
+                </div>
+                <div class="page-actions">
+                    <a href="{{ url_for('admin.buy_enquiries') }}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Enquiries
+                    </a>
+                    <button class="btn-fulfill" id="fulfillBtn">
+                        <i class="fas fa-check-circle"></i>
+                        Mark as Fulfilled
+                    </button>
+                    <button class="btn-delete" id="deleteBtn">
+                        <i class="fas fa-trash"></i>
+                        Delete Enquiry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Enquiry Details -->
+            <div class="details-container">
+                <!-- Student Information -->
+                <div class="details-section">
+                    <h3><i class="fas fa-user"></i> Buyer Information</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Full Name:</label>
+                            <span>{{ enquiry.full_name }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Email:</label>
+                            <span>{{ enquiry.email }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Mobile:</label>
+                            <span>{{ enquiry.mobile }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>College:</label>
+                            <span>{{ enquiry.college }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Branch:</label>
+                            <span>{{ enquiry.branch }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Year:</label>
+                            <span>{{ enquiry.year }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>City/State:</label>
+                            <span>{{ enquiry.city_state or 'Not specified' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Enquiry Date:</label>
+                            <span>{{ enquiry.created_at.strftime('%Y-%m-%d %H:%M:%S') if enquiry.created_at else 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Information -->
+                {% if enquiry.project %}
+                <div class="details-section">
+                    <h3><i class="fas fa-project-diagram"></i> Project Information</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <label>Project Title:</label>
+                            <span>{{ enquiry.project.title }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Description:</label>
+                            <span>{{ enquiry.project.description or 'No description' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Price:</label>
+                            <span>₹{{ enquiry.project.price }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Domain:</label>
+                            <span>{{ enquiry.project.domain }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Project Type:</label>
+                            <span>{{ enquiry.project.project_type.title() }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Difficulty:</label>
+                            <span>{{ enquiry.project.difficulty_level.title() }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Technologies:</label>
+                            <span>{{ enquiry.project.technologies|join(', ') if enquiry.project.technologies else 'Not specified' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Status:</label>
+                            <span class="status-badge {{ enquiry.project.status }}">{{ enquiry.project.status.title() }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Owner Type:</label>
+                            <span>{{ enquiry.project.owner_type.title() }}</span>
+                        </div>
+                        {% if enquiry.project.owner_type == 'admin' %}
+                        <div class="detail-item">
+                            <label>Developer Name:</label>
+                            <span>{{ enquiry.project.developer_name or 'Admin' }}</span>
+                        </div>
+                        {% elif enquiry.project.owner_type == 'student' %}
+                        <div class="detail-item">
+                            <label>Student Name:</label>
+                            <span>{{ enquiry.project.student_name or 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Student Email:</label>
+                            <span>{{ enquiry.project.student_email or 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Student Phone:</label>
+                            <span>{{ enquiry.project.student_phone or 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Student College:</label>
+                            <span>{{ enquiry.project.student_college or 'N/A' }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fulfill button handler
+        document.getElementById('fulfillBtn').addEventListener('click', function() {
+            if (confirm('Mark this enquiry as fulfilled?')) {
+                fetch('{{ url_for('admin.fulfill_buy_enquiry', enquiry_id=enquiry.id) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Enquiry marked as fulfilled!');
+                        location.href = '{{ url_for('admin.buy_enquiries') }}';
+                    } else {
+                        alert('Error updating enquiry');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating enquiry');
+                });
+            }
+        });
+
+        // Delete button handler
+        document.getElementById('deleteBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this enquiry?')) {
+                fetch('{{ url_for('admin.delete_buy_enquiry', enquiry_id=enquiry.id) }}', {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Enquiry deleted successfully!');
+                        location.href = '{{ url_for('admin.buy_enquiries') }}';
+                    } else {
+                        alert('Error deleting enquiry');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting enquiry');
+                });
+            }
+        });
+    </script>
+
+    <style>
+        .details-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .details-section {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .details-section:last-child {
+            border-bottom: none;
+        }
+
+        .details-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .details-section h3 i {
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-item label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .detail-item span {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-badge.pending {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .status-badge.rejected {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-fulfill, .btn-delete {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .btn-fulfill {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-fulfill:hover {
+            background-color: #218838;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+    </style>
+</body>
+</html>
